@@ -26,8 +26,8 @@ export class SignupDto {
   @MinLength(5)
   password: string;
 
-  @IsEnum(UserType)
-  userType: UserType
+  // @IsEnum(UserType)
+  // userType: UserType
 
   @IsOptional()
   productKey?: string;

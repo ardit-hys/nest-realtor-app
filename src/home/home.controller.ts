@@ -1,8 +1,24 @@
-import { Controller, Get, Post, Delete, Put, Query, ParseIntPipe, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Body,
+  Put,
+  Query,
+  ParseIntPipe,
+  Param,
+} from '@nestjs/common';
 import { HomeService } from './home.service';
-import { GetHomesResponseDto } from './dto/home.dto';
+import {
+  CreateHomeDto,
+  GetHomesResponseDto,
+  UpdateHomeDto,
+} from './dto/home.dto';
 import { PropertyType } from '@prisma/client';
 import { GetHomesFilters } from './interfaces/getHomesFilters.interface';
+import { User } from '../user/decorators/user.decorator';
+import { UserInfo } from './interfaces/userTokenInfo.interface';
 
 @Controller('home')
 export class HomeController {
@@ -32,17 +48,22 @@ export class HomeController {
   }
 
   @Post()
-  createHome() {
-    return 'create';
+  createHome(@Body() createHomeBody: CreateHomeDto, @User() user: UserInfo) {
+    // console.log('USERCONTROLLER', user);
+    return this.homeService.createHome(createHomeBody, user.id);
   }
 
   @Put(':id')
-  updateHome() {
-    return {};
+  updateHome(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateHomeBody: UpdateHomeDto,
+    @User() user: UserInfo,
+  ) {
+    return this.homeService.updateHome(id, updateHomeBody, user);
   }
 
   @Delete(':id')
-  deleteHome() {
-    return {};
+  deleteHome(@Param('id', ParseIntPipe) id: number, @User() user: UserInfo) {
+    return this.homeService.deleteHome(id, user);
   }
 }
